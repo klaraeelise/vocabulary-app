@@ -1,0 +1,29 @@
+services:
+  go-service:
+    build: ./backend/go-service
+    ports:
+      - "8080:8080"   # Or whatever your Go service uses
+    restart: unless-stopped
+    env_file:
+      - .env
+
+
+  python-service:
+    build: ./backend/python-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/python-service:/app 
+    env_file:
+      - ./backend/python-service/.env
+    restart: unless-stopped
+
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
