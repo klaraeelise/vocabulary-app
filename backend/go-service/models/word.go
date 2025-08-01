@@ -1,22 +1,18 @@
 package models
 
-// ExampleEntry represents a single example sentence tied to a meaning.
-type ExampleEntry struct {
-    Sentence string `json:"sentence"`
-}
-
-// MeaningEntry represents a single meaning of a word, with optional examples.
+// MeaningEntry: A single meaning, optionally with examples.
 type MeaningEntry struct {
-    Description string         `json:"description"`
-    Examples    []ExampleEntry  `json:"examples,omitempty"`
+    Description string   `json:"description"`
+    Examples    []string `json:"examples,omitempty"` // Flattened for simplicity
 }
 
-// ExpressionEntry represents "Faste uttrykk" idioms with their explanations.
+// ExpressionEntry: Idioms/fixed expressions for a sense.
 type ExpressionEntry struct {
     Phrase      string `json:"phrase"`
     Explanation string `json:"explanation"`
 }
-// WordFormEntry represents a single row in the bøyning table.
+
+// WordFormEntry: One row of inflection data.
 type WordFormEntry struct {
     Label        string   `json:"label"`
     Forms        []string `json:"forms"`
@@ -27,14 +23,19 @@ type WordFormEntry struct {
     Tense        string   `json:"tense,omitempty"`
 }
 
+// SenseEntry: A single dictionary sense (noun, verb, etc.)
+type SenseEntry struct {
+    ID          string            `json:"id"`
+    Category    string            `json:"category"`
+    Gender      string            `json:"gender,omitempty"`
+    Article     string            `json:"article,omitempty"`
+    Meanings    []MeaningEntry     `json:"meanings"`
+    Expressions []ExpressionEntry  `json:"expressions,omitempty"`
+    WordForms   []WordFormEntry    `json:"word_forms,omitempty"`
+}
 
-// WordEntry remains focused on core word data.
+// WordEntry: The top-level word container (multi-sense support).
 type WordEntry struct {
-    Word         string            `json:"word"`
-    Category     string            `json:"category"`
-    Gender       string            `json:"gender,omitempty"`
-    Article      string            `json:"article,omitempty"`
-    Meanings     []MeaningEntry     `json:"meanings"`
-    Expressions  []ExpressionEntry  `json:"expressions,omitempty"`
-    WordForms    []WordFormEntry    `json:"word_forms,omitempty"` // ✅ Still nested but cleanly typed
+    Word    string       `json:"word"`
+    Senses  []SenseEntry `json:"senses"`
 }
