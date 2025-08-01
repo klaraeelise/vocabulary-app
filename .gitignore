@@ -11,4 +11,4 @@
 .env.local
 
 # IDE config
-.vscode/
+.vscode/.DS_Store
