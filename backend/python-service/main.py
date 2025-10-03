@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import get_connection
-from routes import auth, words, root, languages, word_types
+from routes import auth, words, root, languages, word_types, review
 
 # Load env variables first
 load_dotenv()
@@ -29,6 +29,7 @@ app.include_router(words.router)
 app.include_router(auth.router)
 app.include_router(languages.router)      
 app.include_router(word_types.router)
+app.include_router(review.router)
 
 @app.get("/test-db")
 def test_db_connection():
