@@ -1,7 +1,8 @@
 // components/Navbar.tsx
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { logout } from "@/lib/auth";
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard" },
@@ -11,6 +12,12 @@ const navItems = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout(); // Clear token and expiry from localStorage
+    router.push("/auth/login");
+  };
 
   return (
     <nav className="bg-ci_turquoise text-ci_black shadow-md">
@@ -31,10 +38,7 @@ export default function Navbar() {
           ))}
         </ul>
         <button
-          onClick={() => {
-            localStorage.removeItem("token"); // Log out (simple)
-            window.location.href = "/auth/login";
-          }}
+          onClick={handleLogout}
           className="rounded bg-kelp px-3 py-1 text-sm font-semibold hover:bg-ci_linen hover:text-ci_black"
         >
           Logout

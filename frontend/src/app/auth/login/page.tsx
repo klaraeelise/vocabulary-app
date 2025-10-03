@@ -2,6 +2,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { saveAuthToken, setupAutoLogout } from "@/lib/auth";
 
 export default function LoginPage() {
   //Setting up state variables for email, password, and error message, especially setting them to empty state so they can take user input
@@ -36,8 +37,14 @@ export default function LoginPage() {
         return;
       }
 
-      // Save token
-      localStorage.setItem("token", data.token);
+      // Save token with expiry time
+      saveAuthToken(data.token, data.expires_at);
+
+      // Setup automatic logout after 24 hours
+      setupAutoLogout(() => {
+        alert("Your session has expired. Please log in again.");
+        router.push("/auth/login");
+      });
 
       // Redirect to homepage
       router.push("/homepage");
