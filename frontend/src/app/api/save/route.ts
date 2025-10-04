@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
   };
 
   // Send to Python backend
-  const res = await fetch("http://python-service:8000/words/add", {
+  const res = await fetch("http://vocabulary-app-python-service:8000/words/add", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

@@ -2,6 +2,14 @@
 
 A modern multi-language vocabulary learning application with spaced repetition, powered by Python (FastAPI), Go, and Next.js.
 
+## 📖 Documentation
+
+- [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) - Docker Compose setup and proxy manager configuration
+- [SCRAPERS.md](SCRAPERS.md) - Scraper architecture and language implementation guide
+- [ARCHITECTURE.md](ARCHITECTURE.md) - System architecture and design decisions
+- [SETUP.md](SETUP.md) - Detailed setup instructions
+- [API_DOCUMENTATION.md](API_DOCUMENTATION.md) - API endpoint reference
+
 ## Features
 
 ### 🔐 Authentication
@@ -11,7 +19,12 @@ A modern multi-language vocabulary learning application with spaced repetition, 
 
 ### 📚 Vocabulary Management
 - Add words with multiple meanings and translations
-- Support for multiple languages (Norwegian, English, German)
+- Support for multiple languages:
+  - **Norwegian Bokmål** (fully implemented)
+  - **Norwegian Nynorsk** (fully implemented)
+  - **English** (stub - ready for implementation)
+  - **Spanish** (stub - ready for implementation)
+  - **German** (stub - ready for implementation)
 - Comprehensive word data including:
   - Definitions and examples
   - Word forms and inflections
@@ -26,10 +39,11 @@ A modern multi-language vocabulary learning application with spaced repetition, 
 - Statistics and progress tracking
 
 ### 🌍 Multi-Language Dictionary Integration
-- **Norwegian**: ordbokene.no (via Go scraper)
-- **English**: Free Dictionary API
-- **German**: Wiktionary API
-- Modular fetcher system for easy language expansion
+- **Norwegian**: ordbokene.no (via Go scraper) - Bokmål & Nynorsk
+- **English**: Stub implementation (ready for Free Dictionary API or similar)
+- **Spanish**: Stub implementation (ready for RAE or WordReference)
+- **German**: Stub implementation (ready for Duden or DWDS)
+- Modular scraper system for easy language expansion
 
 ### 📊 Progress Tracking
 - Review history and accuracy
@@ -57,18 +71,24 @@ A modern multi-language vocabulary learning application with spaced repetition, 
 git clone https://github.com/klaraeelise/vocabulary-app.git
 cd vocabulary-app
 
-# Create .env file
+# Create Python service .env file
+cd backend/python-service
 cp .env.example .env
-# Edit .env with your configuration
+# Edit .env with your configuration (see DOCKER_DEPLOYMENT.md)
+
+# Return to project root
+cd ../..
 
 # Start all services
-docker-compose up
+docker-compose up --build
 
 # The app will be available at:
 # - Frontend: http://localhost:3000
 # - Python API: http://localhost:8000
 # - Go Scraper: http://localhost:8080
 ```
+
+For detailed Docker deployment instructions, including proxy manager setup at `https://vocabulary-app.local`, see [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md).
 
 ### Option 2: Manual Setup
 

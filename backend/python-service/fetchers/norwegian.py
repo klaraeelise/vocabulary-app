@@ -13,7 +13,7 @@ class NorwegianFetcher(BaseFetcher):
     Uses the existing Go service for scraping.
     """
     
-    def __init__(self, go_service_url: str = "http://localhost:8080"):
+    def __init__(self, go_service_url: str = "http://vocabulary-app-go-service:8080"):
         """
         Initialize Norwegian fetcher.
         

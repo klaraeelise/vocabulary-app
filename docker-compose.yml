@@ -1,17 +1,16 @@
 services:
-  go-service:
+  vocabulary-app-go-service:
     build: ./backend/go-service
+    container_name: vocabulary-app-go-service
     ports:
       - "8080:8080"
     restart: unless-stopped
     env_file:
       - .env
-    # optional dev hot-reload (see note below)
-    # volumes:
-    #   - ./backend/go-service:/app
 
-  python-service:
+  vocabulary-app-python-service:
     build: ./backend/python-service
+    container_name: vocabulary-app-python-service
     ports:
       - "8000:8000"
     volumes:
@@ -20,10 +19,10 @@ services:
       - ./backend/python-service/.env
     restart: unless-stopped
 
-  frontend:
+  vocabulary-app-frontend:
     build: ./frontend
     hostname: vocabulary-app
-    container_name: vocabulary-app
+    container_name: vocabulary-app-frontend
     ports:
       - "3000:3000"
     restart: unless-stopped

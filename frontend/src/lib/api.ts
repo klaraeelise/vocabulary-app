@@ -2,7 +2,9 @@
 
 import { getAuthToken } from "./auth";
 
-const API_BASE_URL = "http://127.0.0.1:8000";
+// Use environment variable or default to localhost for local development
+// When running in Docker, this will be overridden by Docker Compose service names
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://vocabulary-app-python-service:8000";
 
 /**
  * Make an authenticated API request
@@ -26,8 +28,8 @@ async function fetchWithAuth(url: string, options: RequestInit = {}) {
 }
 
 // Fetch word data from scraper (via Next.js API route)
-export async function fetchWord(word: string) {
-  const res = await fetch(`/api/scrape?word=${encodeURIComponent(word)}`);
+export async function fetchWord(word: string, language: string = "no-bm") {
+  const res = await fetch(`/api/scrape?word=${encodeURIComponent(word)}&language=${encodeURIComponent(language)}`);
   if (!res.ok) {
     throw new Error(`Failed to fetch word: ${res.statusText}`);
   }

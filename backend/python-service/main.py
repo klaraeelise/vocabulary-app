@@ -20,7 +20,9 @@ app.add_middleware(
         "http://localhost:3000", 
         "http://127.0.0.1:3000", 
         "http://vocabulary-app.local:3000",
-        "https://vocabulary-app.local"
+        "https://vocabulary-app.local",
+        "http://vocabulary-app:3000",  # Docker Compose service name
+        "http://frontend:3000",  # Alternative Docker service name
     ],
     allow_credentials=True,
     allow_methods=["*"],

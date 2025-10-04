@@ -1,4 +1,4 @@
-package services
+package bokmal_scraper
 
 import (
 	"fmt"
@@ -8,13 +8,13 @@ import (
 	"github.com/gocolly/colly"
 )
 
-// ExtractSenseIDs scans the page and returns a list of sense IDs (li.level1).
+// ExtractSenseIDs scans the page and returns a list of sense IDs.
 func ExtractSenseIDs(url string) ([]string, error) {
 	var ids []string
 	c := colly.NewCollector()
 
 	c.OnHTML("div.article.flex.flex-col", func(e *colly.HTMLElement) {
-		id := e.ChildAttr("div.flex.flex-col.grow", "id") // e.g. bm_60011_body
+		id := e.ChildAttr("div.flex.flex-col.grow", "id")
 		if id != "" {
 			fmt.Println("Found sense ID:", id)
 			ids = append(ids, id)
@@ -27,7 +27,9 @@ func ExtractSenseIDs(url string) ([]string, error) {
 
 	c.OnResponse(func(r *colly.Response) {
 		fmt.Println("🔍 Response length:", len(r.Body))
-		fmt.Println("🔍 Preview:", string(r.Body[:1000])) // print first 1k chars
+		if len(r.Body) > 1000 {
+			fmt.Println("🔍 Preview:", string(r.Body[:1000]))
+		}
 	})
 
 	return ids, nil
@@ -39,14 +41,14 @@ func ScrapeSense(url, senseID string) (models.SenseEntry, error) {
 	sense.ID = senseID
 
 	c := colly.NewCollector()
-	selector := fmt.Sprintf("div#%s", senseID) // instead of li#...
+	selector := fmt.Sprintf("div#%s", senseID)
 	c.OnHTML(selector, func(e *colly.HTMLElement) {
 		sense.ID = senseID
 		sense.Category = strings.TrimSpace(e.ChildText(".subheader .header-group-list"))
 		sense.Gender = strings.TrimSpace(e.ChildText(".subheader em"))
 
 		e.ForEach("section.definitions .definition.level1", func(_ int, def *colly.HTMLElement) {
-			// ✅ Case A: Top-level .explanation spans (often used in verbs)
+			// Case A: Top-level .explanation spans (often used in verbs)
 			def.ForEach(".explanation", func(_ int, exp *colly.HTMLElement) {
 				desc := strings.TrimSpace(exp.Text)
 				if desc != "" {
@@ -64,7 +66,7 @@ func ScrapeSense(url, senseID string) (models.SenseEntry, error) {
 				}
 			})
 
-			// ✅ Case B: Nested meanings inside ol.sub_definitions > li.definition.level2
+			// Case B: Nested meanings inside ol.sub_definitions > li.definition.level2
 			def.ForEach("ol.sub_definitions li.definition.level2", func(_ int, subDef *colly.HTMLElement) {
 				subDef.ForEach(".explanation", func(_ int, exp *colly.HTMLElement) {
 					desc := strings.TrimSpace(exp.Text)

@@ -32,6 +32,7 @@ type WordEntry = {
 
 export default function FetchPage() {
   const [word, setWord] = useState("");
+  const [language, setLanguage] = useState("no-bm"); // Default to Norwegian Bokmål
   const [data, setData] = useState<WordEntry | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +48,7 @@ export default function FetchPage() {
     setSaved(false);
 
     try {
-      const result: WordEntry = await fetchWord(word);
+      const result: WordEntry = await fetchWord(word, language);
       console.log("Fetched data:", result);
       setData(result);
     } catch (err: any) {
@@ -79,6 +80,17 @@ export default function FetchPage() {
           onChange={(e) => setWord(e.target.value)}
           className="flex-1 rounded border px-3 py-2 shadow-sm"
         />
+        <select
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          className="rounded border px-3 py-2 shadow-sm bg-white"
+        >
+          <option value="no-bm">Norwegian Bokmål</option>
+          <option value="no-nn">Norwegian Nynorsk</option>
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="de">German</option>
+        </select>
         <button
           onClick={handleFetch}
           className="border rounded bg-ci_turquoise px-4 py-2 font-semibold text-ci_linen shadow"

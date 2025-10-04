@@ -1,11 +1,8 @@
-/*
-The ScrapeWord function orchestrates the whole process. Especially ensuring the functionality of the loop.
-*/
-
-package services
+package bokmal_scraper
 
 import "strings"
 
+// parseWordFormMetadata extracts metadata from form labels
 func parseWordFormMetadata(label string) (number, definiteness, gender, degree, tense string) {
 	l := strings.ToLower(label)
 	if strings.Contains(l, "entall") {
@@ -45,14 +42,4 @@ func parseWordFormMetadata(label string) (number, definiteness, gender, degree, 
 		tense = "perfect"
 	}
 	return
-}
-
-func buildFullLabel(group, label string) string {
-	if label != "" && group != "" {
-		return group + " / " + label
-	} else if label != "" {
-		return label
-	} else {
-		return group
-	}
 }

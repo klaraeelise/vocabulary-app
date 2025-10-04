@@ -13,7 +13,7 @@ func main() {
     fmt.Println("Go server running")
 
     http.HandleFunc("/api/scrape", handlers.ScrapeHandler)
-    //http.HandleFunc("/api/other", handlers.OtherHandler) // future endpoint
+    http.HandleFunc("/api/languages", handlers.LanguagesHandler)
 
     log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -1,15 +1,14 @@
-package services
+package bokmal_scraper
 
 import (
 	"fmt"
 	"vocabulary-app/backend/go-service/models"
 )
 
-// ScrapeWord orchestrates the entire scraping process: static + dynamic per sense.
-// funcrion is not inherently tied to wordentry but rather just creating it out if the wird itself. it is a function not a method
+// ScrapeWord orchestrates the entire scraping process for Norwegian Bokmål.
 func ScrapeWord(word string) (models.WordEntry, error) {
-	url := fmt.Sprintf("https://ordbokene.no/nob/bm/%s", word) // Construct the URL for scraping
-	entry := models.WordEntry{Word: word}                      //instantiate a new WordEntry
+	url := fmt.Sprintf("https://ordbokene.no/nob/bm/%s", word)
+	entry := models.WordEntry{Word: word}
 
 	// Step 1: Extract all sense IDs
 	senseIDs, err := ExtractSenseIDs(url)

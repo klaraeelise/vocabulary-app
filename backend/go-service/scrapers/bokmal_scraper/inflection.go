@@ -1,8 +1,4 @@
-/*
-ScrapeInflection(url, senseID string) ([]WordFormEntry, error): Handles chromedp logic per sense.
-*/
-
-package services
+package bokmal_scraper
 
 import (
 	"context"
@@ -16,6 +12,7 @@ import (
 	"github.com/chromedp/chromedp"
 )
 
+// ScrapeInflection handles chromedp logic per sense.
 func ScrapeInflection(url, senseID string) ([]models.WordFormEntry, error) {
 	fmt.Println("🚀 Inflection scrape for sense:", senseID)
 
@@ -53,7 +50,7 @@ func ScrapeInflection(url, senseID string) ([]models.WordFormEntry, error) {
 	}
 	fmt.Println("✅ Inflection HTML length:", len(inflectionHTML))
 
-	// Parse inflection table inline
+	// Parse inflection table
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(inflectionHTML))
 	var forms []models.WordFormEntry
 	var currentGroup string
@@ -76,7 +73,6 @@ func ScrapeInflection(url, senseID string) ([]models.WordFormEntry, error) {
 		} else if currentGroup != "" {
 			fullLabel = currentGroup
 		} else {
-			fmt.Println("⚠️ Skipping row: no label/group")
 			return
 		}
 
