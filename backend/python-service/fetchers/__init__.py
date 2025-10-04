@@ -3,7 +3,7 @@ Dictionary fetchers module.
 Provides unified interface for fetching words from multiple dictionary sources.
 
 Supported languages:
-- Norwegian (no): ordbokene.no via Go service
+- Norwegian (no): ordbokene.no via Go service proxy (no local fetcher)
 - English (en): Free Dictionary API
 - German (de): Wiktionary API (TODO: upgrade to duden.de)
 
@@ -27,9 +27,9 @@ from .base import (
     MeaningEntry, 
     ExpressionEntry, 
     WordFormEntry,
-    fetcher_registry
+    fetcher_registry,
+    GoServiceProxyFetcher
 )
-from .norwegian import NorwegianFetcher
 from .english import EnglishFetcher
 from .german import GermanFetcher
 from typing import Optional, List
@@ -42,11 +42,13 @@ def initialize_fetchers():
     """
     Initialize and register all available fetchers.
     Call this once on application startup.
+    
+    Norwegian is proxied directly to the Go service without a local fetcher class.
     """
     try:
-        # Register Norwegian fetcher
-        norwegian = NorwegianFetcher()
-        fetcher_registry.register(norwegian)
+        # Register Norwegian proxy to Go service
+        norwegian_proxy = GoServiceProxyFetcher()
+        fetcher_registry.register(norwegian_proxy)
         
         # Register English fetcher
         english = EnglishFetcher()
@@ -127,7 +129,7 @@ __all__ = [
     'MeaningEntry',
     'ExpressionEntry',
     'WordFormEntry',
-    'NorwegianFetcher',
+    'GoServiceProxyFetcher',
     'EnglishFetcher',
     'GermanFetcher',
     'get_fetcher',
