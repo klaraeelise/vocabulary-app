@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Missing word" }, { status: 400 });
   }
 
-  const res = await fetch(`http://localhost:8080/api/scrape?word=${encodeURIComponent(word)}`);
+ const res = await fetch(`http://go-service:8080/api/scrape?word=${encodeURIComponent(word)}`);
   if (!res.ok) {
     const errText = await res.text();
     return NextResponse.json({ error: errText || "Scraper failed" }, { status: res.status });
