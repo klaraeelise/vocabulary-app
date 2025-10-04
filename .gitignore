@@ -6,9 +6,17 @@
 /frontend/.next
 /frontend/out
 
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
 # Env files
 .env
 .env.local
 
 # IDE config
 .vscode/.DS_Store
+.DS_Store
