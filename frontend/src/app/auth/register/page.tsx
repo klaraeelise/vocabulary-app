@@ -8,6 +8,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://vocabulary-app-python-service:8000";
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,7 +16,7 @@ export default function RegisterPage() {
     setSuccess("");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/auth/register", {
+      const res = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

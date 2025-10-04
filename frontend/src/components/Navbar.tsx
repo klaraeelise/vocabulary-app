@@ -2,7 +2,8 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { logout } from "@/lib/auth";
+import { useState, useEffect } from "react";
+import { logout, isAuthenticated } from "@/lib/auth";
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard" },
@@ -13,9 +14,16 @@ const navItems = [
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  // Check authentication state on mount and when pathname changes
+  useEffect(() => {
+    setLoggedIn(isAuthenticated());
+  }, [pathname]);
 
   const handleLogout = () => {
     logout(); // Clear token and expiry from localStorage
+    setLoggedIn(false); // Update state immediately
     router.push("/auth/login");
   };
 
@@ -37,12 +45,21 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
-        <button
-          onClick={handleLogout}
-          className="rounded bg-kelp px-3 py-1 text-sm font-semibold hover:bg-ci_linen hover:text-ci_black"
-        >
-          Logout
-        </button>
+        {loggedIn ? (
+          <button
+            onClick={handleLogout}
+            className="rounded bg-kelp px-3 py-1 text-sm font-semibold hover:bg-ci_linen hover:text-ci_black"
+          >
+            Logout
+          </button>
+        ) : (
+          <button
+            onClick={() => router.push("/auth/login")}
+            className="rounded bg-kelp px-3 py-1 text-sm font-semibold hover:bg-ci_linen hover:text-ci_black"
+          >
+            Login
+          </button>
+        )}
       </div>
     </nav>
   );

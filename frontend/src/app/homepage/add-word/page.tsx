@@ -9,14 +9,15 @@ export default function AddWordPage() {
   const [wordTypeId, setWordTypeId] = useState("");
   const [meanings, setMeanings] = useState([{ language_id: "", definition: "", note: "" }]);
   const [message, setMessage] = useState("");
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://vocabulary-app-python-service:8000";
 
   // Fetch languages & word types from backend
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/languages")
+    fetch(`${API_BASE_URL}/languages`)
       .then(res => res.json())
       .then(data => setLanguages(data));
 
-    fetch("http://127.0.0.1:8000/word_types")
+    fetch(`${API_BASE_URL}/word_types`)
       .then(res => res.json())
       .then(data => setWordTypes(data));
   }, []);
@@ -49,7 +50,7 @@ export default function AddWordPage() {
       })),
     };
 
-    const res = await fetch("http://127.0.0.1:8000/words/add", {
+    const res = await fetch(`${API_BASE_URL}/words/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

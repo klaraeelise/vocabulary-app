@@ -5,6 +5,7 @@
 
 const TOKEN_KEY = "token";
 const TOKEN_EXPIRY_KEY = "token_expiry";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://vocabulary-app-python-service:8000";
 
 /**
  * Save authentication token and its expiry time to localStorage
@@ -67,7 +68,7 @@ export async function verifyToken(): Promise<boolean> {
   }
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/auth/verify", {
+    const res = await fetch(`${API_BASE_URL}/auth/verify`, {
       headers: {
         "Authorization": `Bearer ${token}`,
       },

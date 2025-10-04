@@ -12,6 +12,7 @@ export default function LoginPage() {
   //Using Next.js router to handle navigation
   //This allows to redirect the user after successful login
   const router = useRouter();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://vocabulary-app-python-service:8000";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); //prevents reload of the page on form submission but rather handle everything in react
@@ -21,7 +22,7 @@ export default function LoginPage() {
       // Send login request to backend, using fetch to send a POST request to the backend login endpoint
       // The body contains the email and password in JSON format
       // The backend should return a token if login is successful
-      const res = await fetch("http://127.0.0.1:8000/auth/login", {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
