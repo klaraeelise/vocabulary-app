@@ -6,6 +6,11 @@
 /frontend/.next
 /frontend/out
 
+# Python cache
+__pycache__
+*.pyc
+*.pyo
+
 # Env files
 .env
 .env.local
