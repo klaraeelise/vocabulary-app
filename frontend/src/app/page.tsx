@@ -9,7 +9,7 @@ export default function HomePage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      router.push("/homepage"); // Auto-redirect if logged in
+      router.push("/dashboard"); // Auto-redirect if logged in
     }
   }, [router]);
 

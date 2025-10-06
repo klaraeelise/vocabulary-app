@@ -7,8 +7,8 @@ import { logout, isAuthenticated } from "@/lib/auth";
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard" },
-  { name: "Study Today", path: "/dashboard/study" },
-  { name: "Fetch New Cards", path: "/dashboard/fetch" },
+  { name: "Study Today", path: "/study" },
+  { name: "Fetch New Cards", path: "/fetch" },
 ];
 
 export default function Navbar() {
@@ -19,11 +19,35 @@ export default function Navbar() {
   // Check authentication state on mount and when pathname changes
   useEffect(() => {
     setLoggedIn(isAuthenticated());
+
+    // Listen for custom auth state changes
+    const handleAuthChange = () => {
+      setLoggedIn(isAuthenticated());
+    };
+
+    // Listen for storage changes (across tabs/windows)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "token" || e.key === "token_expiry") {
+        setLoggedIn(isAuthenticated());
+      }
+    };
+
+    window.addEventListener("authStateChanged", handleAuthChange);
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("authStateChanged", handleAuthChange);
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, [pathname]);
 
   const handleLogout = () => {
     logout(); // Clear token and expiry from localStorage
     setLoggedIn(false); // Update state immediately
+    
+    // Dispatch custom event for other components
+    window.dispatchEvent(new Event("authStateChanged"));
+    
     router.push("/auth/login");
   };
 
