@@ -37,11 +37,11 @@ export async function fetchWord(word: string, language: string = "no-bm") {
 }
 
 // Save word data to DB (via Python service proxy)
-export async function saveWord(data: any) {
+export async function saveWord(data: any, language?: string) {
   const res = await fetch(`${API_BASE_URL}/words/add`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ ...data, language }),
   });
   if (!res.ok) {
     const error = await res.json();

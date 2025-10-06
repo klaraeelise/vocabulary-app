@@ -41,14 +41,17 @@ export default function LoginPage() {
       // Save token with expiry time
       saveAuthToken(data.token, data.expires_at);
 
+      // Dispatch custom event for auth state change
+      window.dispatchEvent(new Event("authStateChanged"));
+
       // Setup automatic logout after 24 hours
       setupAutoLogout(() => {
         alert("Your session has expired. Please log in again.");
         router.push("/auth/login");
       });
 
-      // Redirect to homepage
-      router.push("/homepage");
+      // Redirect to dashboard
+      router.push("/dashboard");
     } catch (err) {
       setError("Server error. Please try again.");
     }
