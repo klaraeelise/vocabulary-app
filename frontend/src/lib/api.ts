@@ -115,3 +115,98 @@ export async function addWordToLearning(wordId: number) {
   }
   return res.json();
 }
+
+// Statistics/Subjects endpoints
+export async function getSubjects() {
+  const res = await fetch(`${API_BASE_URL}/subjects/`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch subjects");
+  }
+  return res.json();
+}
+
+export async function getSubjectDetails(subjectId: number) {
+  const res = await fetch(`${API_BASE_URL}/subjects/${subjectId}`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch subject details");
+  }
+  return res.json();
+}
+
+export async function getSubjectQuestions(subjectId: number, difficulty?: string, limit: number = 10) {
+  let url = `${API_BASE_URL}/subjects/${subjectId}/questions?limit=${limit}`;
+  if (difficulty) {
+    url += `&difficulty=${difficulty}`;
+  }
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error("Failed to fetch questions");
+  }
+  return res.json();
+}
+
+// Question review endpoints
+export async function getDueQuestions(subjectId?: number, limit: number = 20) {
+  let url = `${API_BASE_URL}/question-review/due?limit=${limit}`;
+  if (subjectId) {
+    url += `&subject_id=${subjectId}`;
+  }
+  const res = await fetchWithAuth(url);
+  if (!res.ok) {
+    throw new Error("Failed to fetch due questions");
+  }
+  return res.json();
+}
+
+export async function getNewQuestions(subjectId?: number, difficulty?: string, limit: number = 10) {
+  let url = `${API_BASE_URL}/question-review/new?limit=${limit}`;
+  if (subjectId) {
+    url += `&subject_id=${subjectId}`;
+  }
+  if (difficulty) {
+    url += `&difficulty=${difficulty}`;
+  }
+  const res = await fetchWithAuth(url);
+  if (!res.ok) {
+    throw new Error("Failed to fetch new questions");
+  }
+  return res.json();
+}
+
+export async function addQuestionToLearning(questionId: number) {
+  const res = await fetchWithAuth(`${API_BASE_URL}/question-review/add-question`, {
+    method: "POST",
+    body: JSON.stringify({ question_id: questionId }),
+  });
+  if (!res.ok) {
+    throw new Error("Failed to add question to learning queue");
+  }
+  return res.json();
+}
+
+export async function submitQuestionReview(questionId: number, selectedOptionId: number, timeSpentSeconds?: number) {
+  const res = await fetchWithAuth(`${API_BASE_URL}/question-review/submit`, {
+    method: "POST",
+    body: JSON.stringify({
+      question_id: questionId,
+      selected_option_id: selectedOptionId,
+      time_spent_seconds: timeSpentSeconds,
+    }),
+  });
+  if (!res.ok) {
+    throw new Error("Failed to submit question review");
+  }
+  return res.json();
+}
+
+export async function getQuestionStats(subjectId?: number) {
+  let url = `${API_BASE_URL}/question-review/stats`;
+  if (subjectId) {
+    url += `?subject_id=${subjectId}`;
+  }
+  const res = await fetchWithAuth(url);
+  if (!res.ok) {
+    throw new Error("Failed to fetch question stats");
+  }
+  return res.json();
+}
