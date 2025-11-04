@@ -4,7 +4,7 @@ Handles fetching words for review and recording review results.
 """
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, validator
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from typing import Optional, List
 from db_utils import get_db_cursor, logger
 from auth_utils import get_current_user

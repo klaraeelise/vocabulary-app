@@ -1,9 +1,20 @@
 # Vocabulary App
 
-A modern multi-language vocabulary learning application with spaced repetition, powered by Python (FastAPI), Go, and Next.js.
+A modern multi-subject learning application with spaced repetition, powered by Python (FastAPI), Go, and Next.js.
+
+## ✨ What's New: Statistics Learning Module!
+
+The app now supports **statistics learning** in addition to language vocabulary! Practice p-values, regression, ANOVA, and more with the same proven spaced repetition system.
+
+🎓 **Perfect for students learning both languages AND statistics!**
+
+See [QUICK_START.md](QUICK_START.md) for a quick introduction to the statistics module.
 
 ## 📖 Documentation
 
+- [QUICK_START.md](QUICK_START.md) - Get started with statistics learning
+- [STATISTICS_MODULE_SETUP.md](STATISTICS_MODULE_SETUP.md) - Statistics module technical setup
+- [IMPLEMENTATION_NOTES.md](IMPLEMENTATION_NOTES.md) - Detailed implementation documentation
 - [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) - Docker Compose setup and proxy manager configuration
 - [SCRAPERS.md](SCRAPERS.md) - Scraper architecture and language implementation guide
 - [ARCHITECTURE.md](ARCHITECTURE.md) - System architecture and design decisions
@@ -11,6 +22,11 @@ A modern multi-language vocabulary learning application with spaced repetition, 
 - [API_DOCUMENTATION.md](API_DOCUMENTATION.md) - API endpoint reference
 
 ## Features
+
+### 🆕 Multi-Subject Learning
+- **Language Vocabulary**: Norwegian, English, German, and more
+- **Statistics**: 25+ questions covering p-values, residuals, linear models, ANOVA, ANCOVA, and core concepts
+- **Expandable**: Easy to add more subjects (Math, Science, etc.)
 
 ### 🔐 Authentication
 - Secure JWT-based authentication
