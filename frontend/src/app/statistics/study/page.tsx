@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAuthToken, isTokenExpired, logout } from "@/lib/auth";
+import { getDueQuestions, submitQuestionReview } from "@/lib/api";
 
 interface Option {
   id: number;
@@ -33,10 +34,10 @@ export default function StudyStatisticsPage() {
   const [sessionStats, setSessionStats] = useState({ correct: 0, total: 0 });
 
   useEffect(() => {
-    fetchDueQuestions();
+    fetchDueQuestionsData();
   }, []);
 
-  const fetchDueQuestions = async () => {
+  const fetchDueQuestionsData = async () => {
     const token = getAuthToken();
     
     if (!token || isTokenExpired()) {
@@ -46,22 +47,7 @@ export default function StudyStatisticsPage() {
     }
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/question-review/due?limit=20", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          logout();
-          router.push("/auth/login");
-          return;
-        }
-        throw new Error("Failed to fetch questions");
-      }
-
-      const data = await res.json();
+      const data = await getDueQuestions(undefined, 20);
       setQuestions(data.questions);
       
       if (data.questions.length === 0) {
@@ -80,25 +66,10 @@ export default function StudyStatisticsPage() {
       return;
     }
 
-    const token = getAuthToken();
     const currentQuestion = questions[currentIndex];
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/question-review/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          question_id: currentQuestion.question_id,
-          selected_option_id: selectedOption,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to submit answer");
-
-      const data = await res.json();
+      const data = await submitQuestionReview(currentQuestion.question_id, selectedOption);
       setResult(data);
       setShowResult(true);
 

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAuthToken, isTokenExpired, logout } from "@/lib/auth";
+import { getSubjects, getSubjectQuestions, addQuestionToLearning } from "@/lib/api";
 
 interface Subject {
   id: number;
@@ -46,22 +47,19 @@ export default function BrowseStatisticsPage() {
       return;
     }
 
-    fetchSubjects();
+    fetchSubjectsData();
   };
 
-  const fetchSubjects = async () => {
+  const fetchSubjectsData = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/subjects/");
-      if (!res.ok) throw new Error("Failed to fetch subjects");
-      
-      const data = await res.json();
+      const data = await getSubjects();
       setSubjects(data.subjects);
       
       // Auto-select Statistics subject
       const statsSubject = data.subjects.find((s: Subject) => s.code === "STAT");
       if (statsSubject) {
         setSelectedSubject(statsSubject);
-        fetchQuestions(statsSubject.id);
+        fetchQuestionsData(statsSubject.id);
       }
     } catch (err) {
       setError("Failed to load subjects");
@@ -70,18 +68,11 @@ export default function BrowseStatisticsPage() {
     }
   };
 
-  const fetchQuestions = async (subjectId: number, diff?: string) => {
+  const fetchQuestionsData = async (subjectId: number, diff?: string) => {
     setLoading(true);
     try {
-      let url = `http://127.0.0.1:8000/subjects/${subjectId}/questions?limit=20`;
-      if (diff && diff !== "all") {
-        url += `&difficulty=${diff}`;
-      }
-      
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch questions");
-      
-      const data = await res.json();
+      const difficultyFilter = diff && diff !== "all" ? diff : undefined;
+      const data = await getSubjectQuestions(subjectId, difficultyFilter, 20);
       setQuestions(data.questions);
     } catch (err) {
       setError("Failed to load questions");
@@ -93,41 +84,25 @@ export default function BrowseStatisticsPage() {
   const handleDifficultyChange = (newDiff: string) => {
     setDifficulty(newDiff);
     if (selectedSubject) {
-      fetchQuestions(selectedSubject.id, newDiff);
+      fetchQuestionsData(selectedSubject.id, newDiff);
     }
   };
 
   const handleAddToLearning = async (questionId: number) => {
-    const token = getAuthToken();
-    
     try {
-      const res = await fetch("http://127.0.0.1:8000/question-review/add-question", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ question_id: questionId }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        if (data.detail?.includes("already in learning queue")) {
-          alert("This question is already in your learning queue!");
-        } else {
-          throw new Error("Failed to add question");
-        }
-        return;
-      }
-
+      await addQuestionToLearning(questionId);
       alert("Question added to your learning queue! ✅");
       
       // Refresh questions to show updated state
       if (selectedSubject) {
-        fetchQuestions(selectedSubject.id, difficulty);
+        fetchQuestionsData(selectedSubject.id, difficulty);
       }
-    } catch (err) {
-      alert("Failed to add question. Please try again.");
+    } catch (err: any) {
+      if (err.message.includes("already in learning queue")) {
+        alert("This question is already in your learning queue!");
+      } else {
+        alert("Failed to add question. Please try again.");
+      }
     }
   };
 
